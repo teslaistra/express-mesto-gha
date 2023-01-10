@@ -5,7 +5,7 @@ const User = require('../models/user');
 userRoutes.get('/users', (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 });
 
 userRoutes.get('/users/:id', (req, res) => {

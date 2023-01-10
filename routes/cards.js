@@ -5,7 +5,7 @@ const Card = require('../models/card');
 cardsRoutes.get('/cards', (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 });
 
 cardsRoutes.post('/cards', (req, res) => {
