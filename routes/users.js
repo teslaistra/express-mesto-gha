@@ -5,7 +5,7 @@ const User = require('../models/user');
 userRoutes.get('/users', (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(res.status(500).send({ message: 'На сервере произошла ошибка' }));
 });
 
 userRoutes.get('/users/:id', (req, res) => {
@@ -21,7 +21,7 @@ userRoutes.get('/users/:id', (req, res) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
       }
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 });
 
@@ -34,7 +34,7 @@ userRoutes.post('/users', (req, res) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
       }
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 });
 
@@ -52,7 +52,7 @@ userRoutes.patch('/users/me', (req, res) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
       }
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 });
 
@@ -70,7 +70,7 @@ userRoutes.patch('/users/me/avatar', (req, res) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
       }
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 });
 

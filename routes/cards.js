@@ -5,7 +5,7 @@ const Card = require('../models/card');
 cardsRoutes.get('/cards', (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(res.status(500).send({ message: 'На сервере произошла ошибка' }));
 });
 
 cardsRoutes.post('/cards', (req, res) => {
@@ -16,7 +16,7 @@ cardsRoutes.post('/cards', (req, res) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
       }
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 });
 
@@ -33,7 +33,7 @@ cardsRoutes.delete('/cards/:id', (req, res) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
       }
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 });
 
@@ -53,7 +53,7 @@ cardsRoutes.put('/cards/:cardId/likes', (req, res) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
       }
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 });
 
@@ -72,7 +72,7 @@ cardsRoutes.delete('/cards/:cardId/likes', (req, res) => {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(400).send({ message: err.message });
     }
-    res.status(500).send({ message: err.message });
+    res.status(500).send({ message: 'На сервере произошла ошибка' });
   });
 });
 
