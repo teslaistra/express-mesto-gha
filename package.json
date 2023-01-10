@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/yandex-praktikum/express-mesto-gha.git"
   },
-  "author": "",
+  "author": "Efimov Daniil",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/yandex-praktikum/express-mesto-gha/issues"
