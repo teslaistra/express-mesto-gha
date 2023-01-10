@@ -17,7 +17,12 @@ userRoutes.get('/users/:id', (req, res) => {
         res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
       }
     })
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: err.message });
+    });
 });
 
 userRoutes.post('/users', (req, res) => {
@@ -25,7 +30,12 @@ userRoutes.post('/users', (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: err.message });
+    });
 });
 
 userRoutes.patch('/users/me', (req, res) => {
@@ -37,7 +47,12 @@ userRoutes.patch('/users/me', (req, res) => {
       res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
     }
   })
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: err.message });
+    });
 });
 
 userRoutes.patch('/users/me/avatar', (req, res) => {
@@ -49,7 +64,12 @@ userRoutes.patch('/users/me/avatar', (req, res) => {
       res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
     }
   })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: err.message });
+    });
 });
 
 module.exports = userRoutes;

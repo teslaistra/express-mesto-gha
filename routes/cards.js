@@ -12,7 +12,12 @@ cardsRoutes.post('/cards', (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: err.message });
+    });
 });
 
 cardsRoutes.delete('/cards/:id', (req, res) => {
@@ -24,7 +29,12 @@ cardsRoutes.delete('/cards/:id', (req, res) => {
         res.status(404).send({ message: 'Card not found!' });
       }
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: err.message });
+    });
 });
 
 cardsRoutes.put('/cards/:cardId/likes', (req, res) => {
@@ -39,7 +49,12 @@ cardsRoutes.put('/cards/:cardId/likes', (req, res) => {
       res.status(404).send({ message: 'Card not found!' });
     }
   })
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: err.message });
+    });
 });
 
 cardsRoutes.delete('/cards/:cardId/likes', (req, res) => {
@@ -53,7 +68,12 @@ cardsRoutes.delete('/cards/:cardId/likes', (req, res) => {
     } else {
       res.status(404).send({ message: 'Card not found!' });
     }
-  }).catch((err) => res.status(400).send({ message: err.message }));
+  }).catch((err) => {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
+      res.status(400).send({ message: err.message });
+    }
+    res.status(500).send({ message: err.message });
+  });
 });
 
 module.exports = cardsRoutes;
