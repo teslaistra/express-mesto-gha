@@ -25,10 +25,17 @@ module.exports.createUser = (req, res) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({
+      email: user.email,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: err.message });
+      } else if (err.code === 11000) {
+        res.status(409).send({ message: 'Пользователь с таким email уже существует' });
       }
       res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
