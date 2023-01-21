@@ -1,6 +1,3 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken'); // импортируем модуль jsonwebtoken
-
 const userRoutes = require('express').Router();
 
 const User = require('../models/user');
