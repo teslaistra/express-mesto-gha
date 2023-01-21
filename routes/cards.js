@@ -1,6 +1,7 @@
 const cardsRoutes = require('express').Router();
 
 const Card = require('../models/card');
+const cardUser = require('../middlewares/userCard');
 
 cardsRoutes.get('/cards', (req, res) => {
   Card.find({})
@@ -20,7 +21,7 @@ cardsRoutes.post('/cards', (req, res) => {
     });
 });
 
-cardsRoutes.delete('/cards/:id', (req, res) => {
+cardsRoutes.delete('/cards/:id', cardUser, (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => {
       if (card) {
