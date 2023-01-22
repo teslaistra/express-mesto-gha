@@ -5,7 +5,7 @@ const User = require('../models/user');
 
 module.exports.login = (req, res) => {
   const { password, email } = req.body;
-
+  console.log(req.body);
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
