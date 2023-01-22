@@ -1,9 +1,8 @@
 const cardsRoutes = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 
-const cardUser = require('../middlewares/userCard');
 const {
-  getCards, createCard, deleteCard, likeCard, dislikeCard,
+  getCards, createCard, deleteCard, likeCard, dislikeCard, verifyOwnership,
 } = require('../controllers/cards');
 
 cardsRoutes.get('/cards', getCards);
@@ -26,7 +25,7 @@ cardsRoutes.delete(
       id: Joi.string().alphanum().length(24).required(),
     }),
   }),
-  cardUser,
+  verifyOwnership,
   deleteCard,
 );
 
