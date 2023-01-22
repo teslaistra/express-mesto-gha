@@ -11,11 +11,8 @@ module.exports.getCards = (req, res, next) => {
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.setStatus(201).send({ data: card }))
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(ValidationError('Ошибка валидации данных'));
-      }
       next(err);
     });
 };
@@ -50,9 +47,6 @@ module.exports.likeCard = (req, res, next) => {
     }
   })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Ошибка валидации данных'));
-      }
       next(err);
     });
 };

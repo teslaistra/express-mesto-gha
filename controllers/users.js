@@ -11,7 +11,6 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      // res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).end();
       res.send({ token });
     })
     .catch(next);
@@ -31,16 +30,13 @@ module.exports.createUser = (req, res, next) => {
       name: user.name,
       about: user.about,
       avatar: user.avatar,
+      _id: user._id,
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Ошибка валидации данных'));
-      }
-
       if (err.code === 11000) {
-        next(new UniqueError('Пользователь с таким email уже существует'));
+        return next(new UniqueError('Пользователь с таким email уже существует'));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -60,9 +56,6 @@ module.exports.getUser = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Ошибка валидации данных'));
-      }
       next(err);
     });
 };
@@ -78,9 +71,6 @@ module.exports.updateUser = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Ошибка валидации данных'));
-      }
       next(err);
     });
 };
@@ -97,9 +87,9 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Ошибка валидации данных'));
+        return next(new ValidationError('Ошибка валидации данных'));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -113,9 +103,6 @@ module.exports.getMe = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Ошибка валидации данных'));
-      }
       next(err);
     });
 };
