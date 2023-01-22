@@ -42,12 +42,12 @@ app.post(
   createUser,
 );
 
-app.use(errors());
-
 app.use(auth);
 
 app.use(userRoute);
 app.use(cardRoute);
+
+app.use(errors());
 
 app.use(notFoundRoute);
 app.listen(PORT);
