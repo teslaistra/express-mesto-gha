@@ -14,9 +14,9 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(ValidationError('Ошибка валидации данных'));
+        next(ValidationError('Ошибка валидации данных'));
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -31,9 +31,9 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new ValidationError('Ошибка валидации данных'));
+        next(new ValidationError('Ошибка валидации данных'));
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -51,9 +51,9 @@ module.exports.likeCard = (req, res, next) => {
   })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new ValidationError('Ошибка валидации данных'));
+        next(new ValidationError('Ошибка валидации данных'));
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -70,8 +70,8 @@ module.exports.dislikeCard = (req, res, next) => {
     }
   }).catch((err) => {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return next(new ValidationError('Ошибка валидации данных'));
+      next(new ValidationError('Ошибка валидации данных'));
     }
-    return next(err);
+    next(err);
   });
 };

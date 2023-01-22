@@ -4,9 +4,9 @@ const { errors, celebrate, Joi } = require('celebrate');
 
 const userRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
-const notFoundRoute = require('./routes/notFound');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
+const Error404 = require('./errors/404-error');
 
 const { PORT = 3000 } = process.env;
 
@@ -47,21 +47,19 @@ app.use(auth);
 app.use(userRoute);
 app.use(cardRoute);
 
-app.use(errors());
-
-app.use((err, req, res) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
+app.use('/', (req, res, next) => {
+  next(new Error404('Запрашиваемый ресурс не найден'));
 });
 
-app.use(notFoundRoute);
+app.use(errors());
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode).send({
+    message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
+  });
+});
+
 app.listen(PORT);

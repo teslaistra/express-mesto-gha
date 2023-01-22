@@ -8,7 +8,6 @@ const ValidationError = require('../errors/400-error');
 
 module.exports.login = (req, res, next) => {
   const { password, email } = req.body;
-  console.log(req.body);
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
@@ -35,13 +34,13 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new ValidationError('Ошибка валидации данных'));
+        next(new ValidationError('Ошибка валидации данных'));
       }
 
       if (err.code === 11000) {
-        return next(new UniqueError('Пользователь с таким email уже существует'));
+        next(new UniqueError('Пользователь с таким email уже существует'));
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -62,9 +61,9 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new ValidationError('Ошибка валидации данных'));
+        next(new ValidationError('Ошибка валидации данных'));
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -80,9 +79,9 @@ module.exports.updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new ValidationError('Ошибка валидации данных'));
+        next(new ValidationError('Ошибка валидации данных'));
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -98,9 +97,9 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new ValidationError('Ошибка валидации данных'));
+        next(new ValidationError('Ошибка валидации данных'));
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -115,8 +114,8 @@ module.exports.getMe = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new ValidationError('Ошибка валидации данных'));
+        next(new ValidationError('Ошибка валидации данных'));
       }
-      return next(err);
+      next(err);
     });
 };
