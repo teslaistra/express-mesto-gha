@@ -7,21 +7,13 @@ const {
 
 userRoutes.get('/users', getUsers);
 
-userRoutes.get(
-  '/users/me',
-  celebrate({
-    headers: Joi.object().keys({
-      authorization: Joi.string().required(),
-    }).unknown(true),
-  }),
-  getMe,
-);
+userRoutes.get('/users/me', getMe);
 
 userRoutes.get(
   '/users/:id',
   celebrate({
     params: Joi.object().keys({
-      id: Joi.string().alphanum().length(24),
+      id: Joi.string().length(24).hex(),
     }),
   }),
   getUser,
