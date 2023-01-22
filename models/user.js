@@ -45,13 +45,13 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error401('Пользователь с таким email не найден'));
+        return Promise.reject(new Error401('Неверные почта или пароль'));
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error401('Неверный пароль'));
+            return Promise.reject(new Error401('Неверные почта или пароль'));
           }
 
           return user;
