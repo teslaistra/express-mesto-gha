@@ -35,11 +35,11 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(ValidationError('Ошибка валидации данных'));
+        return next(new ValidationError('Ошибка валидации данных'));
       }
 
       if (err.code === 11000) {
-        return next(UniqueError('Пользователь с таким email уже существует'));
+        return next(new UniqueError('Пользователь с таким email уже существует'));
       }
       return next(err);
     });
