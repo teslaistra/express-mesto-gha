@@ -8,6 +8,16 @@ const {
 userRoutes.get('/users', getUsers);
 
 userRoutes.get(
+  '/users/me',
+  celebrate({
+    headers: Joi.object().keys({
+      authorization: Joi.string().required(),
+    }).unknown(true),
+  }),
+  getMe,
+);
+
+userRoutes.get(
   '/users/:id',
   celebrate({
     params: Joi.object().keys({
@@ -36,16 +46,6 @@ userRoutes.patch(
     }),
   }),
   updateAvatar,
-);
-
-userRoutes.get(
-  '/users/me',
-  celebrate({
-    headers: Joi.object().keys({
-      authorization: Joi.string().required(),
-    }).unknown(true),
-  }),
-  getMe,
 );
 
 module.exports = userRoutes;
