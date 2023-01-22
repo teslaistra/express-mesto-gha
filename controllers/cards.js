@@ -1,41 +1,43 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/404-error');
+const ValidationError = require('../errors/400-error');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
+        return next(ValidationError('Ошибка валидации данных'));
       }
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return next(err);
     });
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => {
       if (card) {
         res.send({ data: card });
       } else {
-        res.status(404).send({ message: 'Card not found!' });
+        throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
+        return next(new ValidationError('Ошибка валидации данных'));
       }
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return next(err);
     });
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -44,18 +46,18 @@ module.exports.likeCard = (req, res) => {
     if (card) {
       res.send({ data: card });
     } else {
-      res.status(404).send({ message: 'Card not found!' });
+      throw new NotFoundError('Запрашиваемая карточка не найдена');
     }
   })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
+        return next(new ValidationError('Ошибка валидации данных'));
       }
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return next(err);
     });
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
@@ -64,12 +66,12 @@ module.exports.dislikeCard = (req, res) => {
     if (card) {
       res.send({ data: card });
     } else {
-      res.status(404).send({ message: 'Card not found!' });
+      throw new NotFoundError('Запрашиваемая карточка не найдена');
     }
   }).catch((err) => {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      res.status(400).send({ message: err.message });
+      return next(new ValidationError('Ошибка валидации данных'));
     }
-    res.status(500).send({ message: 'На сервере произошла ошибка' });
+    return next(err);
   });
 };
