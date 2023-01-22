@@ -100,3 +100,20 @@ module.exports.updateAvatar = (req, res) => {
       res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
+
+module.exports.getMe = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (user) {
+        res.send({ data: user });
+      } else {
+        res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
+};

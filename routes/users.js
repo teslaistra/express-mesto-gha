@@ -2,7 +2,7 @@ const userRoutes = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 
 const {
-  getUsers, getUser, updateUser, updateAvatar,
+  getUsers, getUser, updateUser, updateAvatar, getMe
 } = require('../controllers/users');
 
 userRoutes.get('/users', getUsers);
@@ -36,6 +36,16 @@ userRoutes.patch(
     }),
   }),
   updateAvatar,
+);
+
+userRoutes.get(
+  '/users/me',
+  celebrate({
+    headers: Joi.object().keys({
+      authorization: Joi.string().required(),
+    }).unknown(true),
+  }),
+  getMe,
 );
 
 module.exports = userRoutes;
