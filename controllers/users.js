@@ -99,4 +99,3 @@ module.exports.updateAvatar = (req, res) => {
       res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
-
