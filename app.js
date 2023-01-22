@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
+
 const userRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
 const notFoundRoute = require('./routes/notFound');
@@ -19,6 +21,8 @@ app.post('/signin', login);
 app.post('/signup', createUser);
 
 app.use(auth);
+
+app.use(errors());
 
 app.use(userRoute);
 app.use(cardRoute);
