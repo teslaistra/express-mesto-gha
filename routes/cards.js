@@ -4,6 +4,7 @@ const { celebrate, Joi } = require('celebrate');
 const {
   getCards, createCard, deleteCard, likeCard, dislikeCard, verifyOwnership,
 } = require('../controllers/cards');
+const { regexURL } = require('../utils/constants');
 
 cardsRoutes.get('/cards', getCards);
 
@@ -12,7 +13,7 @@ cardsRoutes.post(
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
-      link: Joi.string().required().regex(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/),
+      link: Joi.string().required().regex(regexURL),
     }),
   }),
   createCard,
