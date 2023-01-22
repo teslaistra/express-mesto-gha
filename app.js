@@ -8,8 +8,6 @@ const notFoundRoute = require('./routes/notFound');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 
-const { InternalServerError } = require('./errors/500-error');
-
 const { PORT = 3000 } = process.env;
 
 const app = express();
