@@ -5,6 +5,7 @@ const ForbiddenError = require('../errors/403-error');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
+    .populate('user')
     .then((cards) => res.send({ data: cards }))
     .catch(next);
 };
