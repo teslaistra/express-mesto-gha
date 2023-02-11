@@ -8,6 +8,7 @@ const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 const Error404 = require('./errors/404-error');
 const { regexURL } = require('./utils/constants');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -43,6 +44,8 @@ app.post(
   createUser,
 );
 
+app.use(requestLogger); // подключаем логгер запросов
+
 app.use(auth);
 
 app.use(userRoute);
@@ -51,6 +54,8 @@ app.use(cardRoute);
 app.use('/', (req, res, next) => {
   next(new Error404('Запрашиваемый ресурс не найден'));
 });
+
+app.use(errorLogger); // подключаем логгер ошибок
 
 app.use(errors());
 
