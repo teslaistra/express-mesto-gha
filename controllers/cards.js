@@ -1,7 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/404-error');
-const ValidationError = require('../errors/400-error');
 const ForbiddenError = require('../errors/403-error');
+const ValidationError = require('../errors/400-error');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -15,7 +15,10 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(201).send({ data: card }))
     .catch((err) => {
-      next(err);
+      if (err.name === 'ValidationError') {
+        return next(new ValidationError('Переданы некорректные данные при создании карточки'));
+      }
+      return next(err);
     });
 };
 
@@ -33,9 +36,6 @@ module.exports.verifyOwnership = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Ошибка валидации данных'));
-      }
       next(err);
     });
 };
@@ -43,16 +43,9 @@ module.exports.verifyOwnership = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => {
-      if (card) {
-        res.send({ data: card });
-      } else {
-        throw new NotFoundError('Запрашиваемая карточка не найдена');
-      }
+      res.send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Ошибка валидации данных'));
-      }
       next(err);
     });
 };
@@ -70,7 +63,10 @@ module.exports.likeCard = (req, res, next) => {
     }
   })
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        return next(new ValidationError('Передан некорретный Id'));
+      }
+      return next(err);
     });
 };
 
@@ -86,9 +82,6 @@ module.exports.dislikeCard = (req, res, next) => {
       throw new NotFoundError('Запрашиваемая карточка не найдена');
     }
   }).catch((err) => {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
-      next(new ValidationError('Ошибка валидации данных'));
-    }
     next(err);
   });
 };
