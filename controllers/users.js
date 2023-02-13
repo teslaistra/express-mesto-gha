@@ -5,6 +5,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/404-error');
 const UniqueError = require('../errors/409-error');
 const ValidationError = require('../errors/400-error');
+const InvalidDataError = require('../errors/401-error');
 
 module.exports.login = (req, res, next) => {
   const { password, email } = req.body;
@@ -34,7 +35,7 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new UniqueError('Переданы некорректные данные при создании пользователя'));
+        return next(new InvalidDataError('Переданы некорректные данные при создании пользователя'));
       }
       if (err.code === 11000) {
         return next(new UniqueError('Пользователь с таким email уже существует'));
@@ -96,7 +97,10 @@ module.exports.updateAvatar = (req, res, next) => {
       }
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'ValidationError') {
+        return next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
+      }
+      return next(err);
     });
 };
 

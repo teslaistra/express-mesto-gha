@@ -46,7 +46,10 @@ module.exports.deleteCard = (req, res, next) => {
       res.send({ data: card });
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        return next(new ValidationError('Передан некорретный Id'));
+      }
+      return next(err);
     });
 };
 
@@ -82,6 +85,9 @@ module.exports.dislikeCard = (req, res, next) => {
       throw new NotFoundError('Запрашиваемая карточка не найдена');
     }
   }).catch((err) => {
-    next(err);
+    if (err.name === 'CastError') {
+      return next(new ValidationError('Передан некорретный Id'));
+    }
+    return next(err);
   });
 };
