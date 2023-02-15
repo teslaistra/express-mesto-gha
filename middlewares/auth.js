@@ -10,8 +10,8 @@ module.exports = (req, res, next) => {
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return next(new UnAuthorizedError('Необходима авторизация'));
   }
-
-  const token = authorization.replace('Bearer ', NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+  console.log(authorization);
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
